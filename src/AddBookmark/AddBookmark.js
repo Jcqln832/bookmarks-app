@@ -24,7 +24,7 @@ class AddBookmark extends Component {
       title: title.value,
       url: url.value,
       description: description.value,
-      rating: rating.value,
+      rating: Number(rating.value),
     }
     this.setState({ error: null })
     fetch(config.API_ENDPOINT, {
@@ -118,7 +118,7 @@ class AddBookmark extends Component {
               type='number'
               name='rating'
               id='rating'
-              defaultValue='1'
+              defaultValue= '1'
               min='1'
               max='5'
               required

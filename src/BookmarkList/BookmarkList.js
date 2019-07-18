@@ -7,6 +7,10 @@ class BookmarkList extends Component {
     bookmarks: []
   };
 
+  onClickEdit = {
+
+  }
+
   render() {
     const { bookmarks } = this.props
     return (

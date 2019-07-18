@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import AddBookmark from './AddBookmark/AddBookmark';
+import EditBookmark from './EditBookmark/EditBookmark';
 import BookmarkList from './BookmarkList/BookmarkList';
 import Nav from './Nav/Nav';
 import config from './config';
@@ -49,6 +50,23 @@ class App extends Component {
     })
   }
 
+  deleteBookmark = bookmarkId => {
+    const newBookmarks = this.state.bookmarks.filter(bm =>
+      bm.id !== bookmarkId
+    )
+    this.setState({
+      bookmarks: newBookmarks
+    })
+  }
+
+  updateBookmark = updatedBookmark => {
+    this.setState({
+      bookmarks: this.state.bookmarks.map(bm =>
+        (bm.id !== updatedBookmark.id) ? bm : updatedBookmark
+      )
+    })
+  }
+
   componentDidMount() {
     fetch(config.API_ENDPOINT, {
       method: 'GET',
@@ -59,7 +77,8 @@ class App extends Component {
     })
       .then(res => {
         if (!res.ok) {
-          throw new Error(res.status)
+          // throw new Error(res.status)
+          return res.json().then(error => Promise.reject(error))
         }
         return res.json()
       })
@@ -69,6 +88,7 @@ class App extends Component {
 
   render() {
     const { bookmarks } = this.state
+    console.log(bookmarks);
     return (
       <main className='App'>
         <h1>Bookmarks!</h1>
@@ -80,6 +100,20 @@ class App extends Component {
             return <AddBookmark 
                 onAddBookmark={this.addBookmark}
                 onClickCancel={() => history.push('/')}
+              />
+            }}
+          />
+          <Route
+            path='/edit/:bookmarkId'
+            render={routeProps => {
+              const { bookmarkId } = routeProps.match.params
+              console.log(bookmarkId)
+              const bookmark = this.state.bookmarks.find(bookmark => bookmark.id === Number(bookmarkId))
+              console.log(bookmark)
+            
+            return <EditBookmark 
+                updateBookmark={this.updateBookmark}
+                bookmark = {bookmark}
               />
             }}
           />
